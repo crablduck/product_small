@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qf.mapper.StudentMapper">
+
+	<resultMap type="student" id="stuMap">
+		<id column="id" property="id" />
+		<result column="name" property="name" />
+		<result column="age" property="age" />
+		<result column="password" property="password" />
+
+		<collection property="books" ofType="book">
+			<id column="id" property="id" />
+			<result column="book_name" property="bookName" />
+			<result column="price_double" property="priceDouble" />
+		</collection>
+	</resultMap>
+
+	<insert id="add" parameterType="student">
+		insert into
+		student(name,age,password)values(#{name},#{age},#{password})
+	</insert>
+
+	<update id="update" parameterType="student">
+		update student set
+		name=#{name},age=#{age},password=#{password} where id = #{id}
+	</update>
+
+	<delete id="delById" parameterType="int">
+		delete from student where id
+		= #{id}
+	</delete>
+
+<!-- 	<select id="getById" parameterType="int" resultMap="stuMap"> -->
+<!-- 		select * from -->
+<!-- 		student where id = #{id} -->
+<!-- 	</select> -->
+
+	<select id="getById" parameterType="int" resultMap="stuMap">
+		SELECT
+			*
+		FROM
+			student s
+		LEFT JOIN book b ON s.id = b.stu_id
+		WHERE
+			s.id = 20
+	</select>
+
+	<select id="getList" parameterType="map" resultMap="stuMap">
+		select * from
+		student limit #{startIndex},#{pageSize}
+	</select>
+
+	<select id="getTotalCount" resultType="int">
+		select count(*) from
+		student
+	</select>
+</mapper>
